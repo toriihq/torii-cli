@@ -6,15 +6,24 @@
   "bin": {
     "torii-cli": "./bin/torii-cli"
   },
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=18.11.0"
   },
   "scripts": {
     "build": "tsc",
     "test": "jest",
     "lint": "biome check",
-    "lint-types": "tsc"
+    "lint-types": "tsc",
+    "prepublishOnly": "npm run lint-types && npm run build && npm test"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.0.0",
@@ -34,11 +43,16 @@
     "openapi",
     "saas-management",
     "llm",
-    "agent"
+    "agent",
+    "automation",
+    "api-client"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/toriihq/torii-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/toriihq/torii-cli/issues"
   },
   "homepage": "https://github.com/toriihq/torii-cli#readme"
 }
