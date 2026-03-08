@@ -10,9 +10,9 @@ OpenAPI-driven CLI for the [Torii](https://www.toriihq.com) API. Dynamically gen
 
 You need a **Torii account** with API access:
 
-1. Log in to your [Torii dashboard](https://app.toriihq.com)
+1. Log in to your [Torii dashboard](https://app.toriihq.com/team/)
 2. Go to **Settings → API** to generate an API key
-3. Your API base URL is `https://api.toriihq.com` (or your custom domain)
+3. Your API base URL is `https://api.toriihq.com`
 
 See the [Torii API documentation](https://developers.toriihq.com) for full details.
 
