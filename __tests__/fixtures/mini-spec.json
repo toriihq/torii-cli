@@ -1,0 +1,129 @@
+{
+  "swagger": "2.0",
+  "info": { "title": "Torii API", "version": "1.0" },
+  "basePath": "/",
+  "paths": {
+    "/v1.0/apps": {
+      "get": {
+        "tags": ["Apps"],
+        "summary": "Get applications",
+        "operationId": "getApps",
+        "parameters": [
+          { "name": "fields", "in": "query", "type": "string", "required": false },
+          { "name": "size", "in": "query", "type": "integer", "required": false },
+          { "name": "cursor", "in": "query", "type": "string", "required": false }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      },
+      "post": {
+        "tags": ["Apps"],
+        "summary": "Create application",
+        "operationId": "createApp",
+        "parameters": [
+          { "name": "body", "in": "body", "schema": { "type": "object" } }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/v1.0/apps/{idApp}": {
+      "get": {
+        "tags": ["Apps"],
+        "summary": "Get application by ID",
+        "operationId": "getApp",
+        "parameters": [
+          { "name": "idApp", "in": "path", "type": "string", "required": true }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      },
+      "put": {
+        "tags": ["Apps"],
+        "summary": "Update application",
+        "operationId": "updateApp",
+        "parameters": [
+          { "name": "idApp", "in": "path", "type": "string", "required": true },
+          { "name": "body", "in": "body", "schema": { "type": "object" } }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/v1.0/apps/search": {
+      "get": {
+        "tags": ["Apps"],
+        "summary": "Search applications",
+        "operationId": "searchApps",
+        "parameters": [
+          { "name": "q", "in": "query", "type": "string", "required": true }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/v1.0/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get users",
+        "operationId": "getUsers",
+        "parameters": [
+          { "name": "email", "in": "query", "type": "string", "required": false }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/v1.0/scim/v2/Users": {
+      "get": {
+        "tags": ["SCIM"],
+        "summary": "SCIM list users",
+        "operationId": "scimListUsers",
+        "parameters": [],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/v1.0/files/upload": {
+      "post": {
+        "tags": ["Files"],
+        "summary": "Upload file",
+        "operationId": "uploadFile",
+        "consumes": ["multipart/form-data"],
+        "parameters": [],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/v1.0/files/{id}/download": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "Download file",
+        "operationId": "downloadFile",
+        "parameters": [
+          { "name": "id", "in": "path", "type": "string", "required": true }
+        ],
+        "responses": { "302": { "description": "Redirect" } }
+      }
+    },
+    "/v1.0/files/url": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "Get upload URL",
+        "operationId": "getFileUrl",
+        "parameters": [],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/v1.0/anonymize": {
+      "post": {
+        "tags": ["Anonymization"],
+        "summary": "Anonymize data",
+        "operationId": "anonymize",
+        "parameters": [],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/v1.0/backoffice/stats": {
+      "get": {
+        "tags": ["Backoffice"],
+        "summary": "Internal stats",
+        "operationId": "getStats",
+        "parameters": [],
+        "responses": { "200": { "description": "OK" } }
+      }
+    }
+  }
+}

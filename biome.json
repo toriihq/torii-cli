@@ -1,0 +1,137 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": { "ignoreUnknown": false, "ignore": ["dist", "coverage"] },
+  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 120 },
+  "organizeImports": { "enabled": false },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "complexity": {
+        "noExtraBooleanCast": "error",
+        "noMultipleSpacesInRegularExpressionLiterals": "error",
+        "noStaticOnlyClass": "off",
+        "noUselessCatch": "error",
+        "noUselessConstructor": "error",
+        "noUselessLoneBlockStatements": "error",
+        "noUselessRename": "error",
+        "noUselessTernary": "error",
+        "noUselessUndefinedInitialization": "error",
+        "noVoid": "off",
+        "noWith": "error",
+        "useLiteralKeys": "off",
+        "useRegexLiterals": "error"
+      },
+      "correctness": {
+        "noConstAssign": "error",
+        "noConstantCondition": "error",
+        "noEmptyCharacterClassInRegex": "error",
+        "noEmptyPattern": "error",
+        "noGlobalObjectCalls": "error",
+        "noInvalidConstructorSuper": "error",
+        "noInvalidUseBeforeDeclaration": "error",
+        "noNewSymbol": "error",
+        "noPrecisionLoss": "error",
+        "noSelfAssign": "error",
+        "noSwitchDeclarations": "error",
+        "noUndeclaredVariables": "error",
+        "noUnreachable": "error",
+        "noUnreachableSuper": "error",
+        "noUnsafeFinally": "error",
+        "noUnusedVariables": "off",
+        "useArrayLiterals": "error",
+        "useIsNan": "error"
+      },
+      "security": { "noGlobalEval": "error" },
+      "style": {
+        "noCommaOperator": "error",
+        "noNonNullAssertion": "off",
+        "noVar": "warn",
+        "noYodaExpression": "error",
+        "useBlockStatements": "off",
+        "useConsistentBuiltinInstantiation": "off",
+        "useConst": "error",
+        "useSingleVarDeclarator": "off"
+      },
+      "suspicious": {
+        "noAsyncPromiseExecutor": "off",
+        "noCatchAssign": "error",
+        "noClassAssign": "error",
+        "noCompareNegZero": "error",
+        "noControlCharactersInRegex": "error",
+        "noDebugger": "error",
+        "noDoubleEquals": "error",
+        "noDuplicateCase": "error",
+        "noDuplicateClassMembers": "error",
+        "noDuplicateObjectKeys": "error",
+        "noDuplicateParameters": "error",
+        "noEmptyBlockStatements": "off",
+        "noFallthroughSwitchClause": "error",
+        "noFunctionAssign": "error",
+        "noGlobalAssign": "error",
+        "noImportAssign": "error",
+        "noMisleadingCharacterClass": "error",
+        "noPrototypeBuiltins": "error",
+        "noRedeclare": "error",
+        "noSelfCompare": "error",
+        "noShadowRestrictedNames": "off",
+        "noSparseArray": "error",
+        "noUnsafeNegation": "error",
+        "useDefaultSwitchClauseLast": "error",
+        "useValidTypeof": "error"
+      }
+    },
+    "ignore": ["jest.config.js", "coverage/*"]
+  },
+  "javascript": {
+    "formatter": { "quoteStyle": "single", "semicolons": "asNeeded", "trailingCommas": "none" },
+    "globals": ["document", "navigator", "window", "describe", "it", "expect", "beforeEach", "afterEach", "beforeAll", "afterAll", "jest"]
+  },
+  "overrides": [
+    {
+      "include": ["**/*.test.[tj]s"],
+      "linter": { "rules": { "suspicious": { "noImportAssign": "off" } } }
+    },
+    {
+      "include": ["*.ts", "*.tsx"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noBannedTypes": "error",
+            "noStaticOnlyClass": "off",
+            "noUselessConstructor": "error",
+            "noUselessTypeConstraint": "error",
+            "noVoid": "off",
+            "useLiteralKeys": "off",
+            "useOptionalChain": "error"
+          },
+          "correctness": {
+            "noInvalidUseBeforeDeclaration": "error",
+            "noPrecisionLoss": "error",
+            "noUndeclaredVariables": "off",
+            "noUnusedVariables": "off",
+            "useArrayLiterals": "off"
+          },
+          "style": {
+            "noNamespace": "error",
+            "noNonNullAssertion": "off",
+            "useConsistentArrayType": {
+              "level": "off",
+              "options": { "syntax": "shorthand" }
+            },
+            "useShorthandFunctionType": "error"
+          },
+          "suspicious": {
+            "noConfusingVoidType": "error",
+            "noDuplicateClassMembers": "error",
+            "noExtraNonNullAssertion": "error",
+            "noMisleadingInstantiator": "error",
+            "noRedeclare": "error"
+          }
+        }
+      }
+    }
+  ],
+  "json": { "linter": { "enabled": false }, "formatter": { "enabled": false } }
+}
