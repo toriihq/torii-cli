@@ -1,6 +1,6 @@
 {
   "name": "torii-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OpenAPI-driven CLI for the Torii API — built for LLM agents",
   "license": "MIT",
   "bin": {
