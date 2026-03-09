@@ -12,18 +12,42 @@ function getSpecOptions(): { specUrl?: string; noCache?: boolean } {
   return { specUrl: process.env.TORII_SPEC_URL, noCache: !globals.cache }
 }
 
+const apiKeyFromEnv = process.env.TORII_API_KEY
+
 program
   .name('torii-cli')
   .version('0.1.0')
   .description('Torii CLI — OpenAPI-driven CLI for LLM agents')
   .option('--api-url <url>', 'Torii API base URL', process.env.TORII_API_URL || 'https://api.toriihq.com')
-  .option('--api-key <key>', 'API Bearer token', process.env.TORII_API_KEY)
+  .option('--api-key <key>', 'API Bearer token', apiKeyFromEnv)
   .option('--timeout <ms>', 'Request timeout', '30000')
   .option('--page-all', 'Auto-follow pagination')
   .option('--page-limit <n>', 'Max pages with --page-all', '100')
   .option('--page-delay <ms>', 'Delay between pagination requests', '0')
   .option('--dry-run', 'Preview HTTP request without executing')
   .option('--no-cache', 'Skip spec cache')
+
+// Mask API key in help output so it doesn't leak to the terminal
+program.configureHelp({
+  optionTerm(option) {
+    return option.flags
+  },
+  optionDescription(option) {
+    const desc = option.description
+    if (option.long === '--api-key' && apiKeyFromEnv) {
+      return `${desc} (default: "***configured***")`
+    }
+    if (option.defaultValue !== undefined && option.long !== '--api-key') {
+      return `${desc} (default: ${JSON.stringify(option.defaultValue)})`
+    }
+    return desc
+  }
+})
+
+// Default action: show help when no subcommand is given
+program.action(() => {
+  program.outputHelp()
+})
 
 // Built-in commands — these do NOT require spec fetch
 program
@@ -240,11 +264,14 @@ const apiHandler = async (op: CliOperation, options: Record<string, any>, global
 async function main() {
   // Check if user invoked a built-in command (no spec fetch needed)
   const userCommand = process.argv[2]
-  // Keep in sync with statically-registered commands above
-  const builtInCommands = new Set(['version', 'cache', 'discovery', 'schema', 'whoami', '--version', '-V', '--help', '-h'])
+  // Commands that never need the spec: version, cache clear
+  const noSpecCommands = new Set(['version', 'cache', '--version', '-V'])
 
-  if (userCommand && !builtInCommands.has(userCommand)) {
-    // Dynamic API command — fetch spec and build command tree before parsing
+  const needsSpec = !userCommand || !noSpecCommands.has(userCommand)
+
+  if (needsSpec) {
+    // Fetch spec and build dynamic command tree before parsing.
+    // This covers: dynamic API commands, --help, -h, and bare `torii-cli`
     try {
       const operations = await fetchAndParseSpec(getSpecOptions())
       buildCommandTree(program, operations, apiHandler)
