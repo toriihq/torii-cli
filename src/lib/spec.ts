@@ -105,7 +105,15 @@ function deriveAction(method: string, path: string): string {
 export function parseSpec(spec: any): CliOperation[] {
   const operations: CliOperation[] = []
   const paths = spec.paths || {}
-  const basePath = (spec.basePath || '').replace(/\/$/, '') // e.g. "/v1.0"
+  // Swagger 2.0: basePath field. OpenAPI 3.0: extract path from servers[0].url
+  let basePath = (spec.basePath || '').replace(/\/$/, '')
+  if (!basePath && spec.servers?.[0]?.url) {
+    try {
+      basePath = new URL(spec.servers[0].url).pathname.replace(/\/$/, '')
+    } catch {
+      // servers URL may be relative or invalid — ignore
+    }
+  }
 
   for (const [pathStr, methods] of Object.entries<any>(paths)) {
     for (const [method, operation] of Object.entries<any>(methods)) {

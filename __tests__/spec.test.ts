@@ -101,3 +101,44 @@ describe('spec parser', () => {
     expect(sizeParam!.type).toBe('number')
   })
 })
+
+describe('OpenAPI 3.0 servers support', () => {
+  test('extracts basePath from servers[0].url', () => {
+    const spec = {
+      openapi: '3.0.0',
+      servers: [{ url: 'https://api.toriihq.com/v1.0' }],
+      paths: {
+        '/apps': {
+          get: {
+            tags: ['Apps'],
+            summary: 'List apps',
+            parameters: []
+          }
+        }
+      }
+    }
+    const ops = parseSpec(spec)
+    const op = ops.find((o) => o.group === 'apps')
+    expect(op).toBeDefined()
+    expect(op!.path).toBe('/v1.0/apps')
+  })
+
+  test('falls back to empty basePath when no servers field', () => {
+    const spec = {
+      openapi: '3.0.0',
+      paths: {
+        '/v1.0/apps': {
+          get: {
+            tags: ['Apps'],
+            summary: 'List apps',
+            parameters: []
+          }
+        }
+      }
+    }
+    const ops = parseSpec(spec)
+    const op = ops.find((o) => o.group === 'apps')
+    expect(op).toBeDefined()
+    expect(op!.path).toBe('/v1.0/apps')
+  })
+})
