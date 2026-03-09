@@ -31,9 +31,11 @@ npx torii-cli discovery
 ## Quick Start
 
 ```bash
-# Set your credentials
+# Set your API key (only required credential)
 export TORII_API_KEY="your-api-key"
-export TORII_API_URL="https://api.toriihq.com"
+
+# Verify connection
+torii-cli whoami
 
 # Discover all available commands
 torii-cli discovery
@@ -42,12 +44,14 @@ torii-cli discovery
 torii-cli apps list --size 10
 ```
 
+To persist credentials, add the `export` line to your shell profile (`~/.bashrc`, `~/.zshenv`, etc.).
+
 ## Configuration
 
 | Variable | CLI Flag | Description |
 |----------|----------|-------------|
 | `TORII_API_KEY` | `--api-key` | API Bearer token **(required)** |
-| `TORII_API_URL` | `--api-url` | Torii API base URL **(required)** |
+| `TORII_API_URL` | `--api-url` | API base URL (defaults to `https://api.toriihq.com`) |
 | `TORII_SPEC_URL` | — | Custom OpenAPI spec URL (optional, defaults to Torii's public spec) |
 
 ## Usage

@@ -16,7 +16,7 @@ program
   .name('torii-cli')
   .version('0.1.0')
   .description('Torii CLI — OpenAPI-driven CLI for LLM agents')
-  .option('--api-url <url>', 'Torii API base URL', process.env.TORII_API_URL)
+  .option('--api-url <url>', 'Torii API base URL', process.env.TORII_API_URL || 'https://api.toriihq.com')
   .option('--api-key <key>', 'API Bearer token', process.env.TORII_API_KEY)
   .option('--timeout <ms>', 'Request timeout', '30000')
   .option('--page-all', 'Auto-follow pagination')

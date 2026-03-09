@@ -3,9 +3,18 @@ name: torii
 description: Manage SaaS applications, users, licenses, and integrations via the Torii API
 ---
 
+## How It Works
+
+This CLI is **dynamically generated from Torii's OpenAPI spec**. It fetches the spec at runtime, parses every endpoint, and builds a command for each one. This means:
+
+- **The commands below are examples, not the full list.** The actual commands depend on which API endpoints exist in the spec.
+- **New API endpoints automatically become CLI commands** — no CLI update needed.
+- **Always run `discovery` first** to see the current, complete command list for your environment.
+- The command set may vary between API versions or environments.
+
 ## Setup
 
-Requires `TORII_API_KEY` and `TORII_API_URL` environment variables.
+Requires `TORII_API_KEY` environment variable. `TORII_API_URL` defaults to `https://api.toriihq.com` — only override for local dev.
 
 **Always run `torii-cli whoami` first** to confirm which org and environment you're connected to.
 
@@ -37,19 +46,25 @@ All commands output JSON to stdout.
    - `in` — where the param goes: query, path, body, formData
    - `kind` — operation type: json, upload, download
 
-## Commands
+## Example Commands
+
+These are common examples. Run `torii-cli discovery` for the full, current list of all available commands.
 
 ```bash
 torii-cli whoami                                    # Show connected org
 torii-cli apps list --size 10                       # List applications
 torii-cli apps get --idApp <id>                     # Get app details
+torii-cli apps search --q "Slack"                   # Search apps by name
 torii-cli users list --size 10                      # List users
-torii-cli contracts list --size 10                  # List contracts
-torii-cli integrations list --size 10               # List connected integrations
-torii-cli audit list --entity apps --size 10        # Audit logs for apps
+torii-cli contracts list                            # List contracts (no --size)
+torii-cli roles list                                # List roles
+torii-cli audit list --size 10                      # Audit logs
+torii-cli applications-users users --idApp <id> --size 10  # App users
 torii-cli files upload --file <path> --type <type>  # Upload a file
 torii-cli files download --id <id> --output <path>  # Download a file
 ```
+
+**Note:** Not all commands support `--size`. Use `torii-cli schema <group> <action>` to check available parameters.
 
 ## Workflows & ID Relationships
 
