@@ -44,6 +44,48 @@ cacheCmd
     formatSuccess({ message: 'Cache cleared' })
   })
 
+program
+  .command('whoami')
+  .description('Show current API environment and organization')
+  .action(async () => {
+    const globals = program.opts()
+    if (!globals.apiKey || !globals.apiUrl) {
+      formatSuccess({
+        apiUrl: globals.apiUrl || '(not set)',
+        apiKey: globals.apiKey ? '***configured***' : '(not set)',
+        org: null
+      })
+      return
+    }
+    const client = new ToriiClient({
+      apiUrl: globals.apiUrl,
+      apiKey: globals.apiKey,
+      timeout: parseInt(globals.timeout, 10)
+    })
+    try {
+      const operations = await fetchAndParseSpec(getSpecOptions())
+      const orgOp = operations.find((o) => o.group === 'organizations' && o.action === 'my')
+      if (!orgOp) {
+        formatSuccess({ apiUrl: globals.apiUrl, apiKey: '***configured***', org: null })
+        return
+      }
+      const result = await client.request('GET', orgOp.path)
+      const data = result.data as any
+      const org = data?.org || data
+      formatSuccess({
+        apiUrl: globals.apiUrl,
+        apiKey: '***configured***',
+        org: {
+          id: org?.id,
+          name: org?.companyName,
+          domain: org?.domain
+        }
+      })
+    } catch {
+      formatSuccess({ apiUrl: globals.apiUrl, apiKey: '***configured***', org: null })
+    }
+  })
+
 // Built-in commands that require spec fetch
 program
   .command('discovery')
@@ -199,7 +241,7 @@ async function main() {
   // Check if user invoked a built-in command (no spec fetch needed)
   const userCommand = process.argv[2]
   // Keep in sync with statically-registered commands above
-  const builtInCommands = new Set(['version', 'cache', 'discovery', 'schema', '--version', '-V', '--help', '-h'])
+  const builtInCommands = new Set(['version', 'cache', 'discovery', 'schema', 'whoami', '--version', '-V', '--help', '-h'])
 
   if (userCommand && !builtInCommands.has(userCommand)) {
     // Dynamic API command — fetch spec and build command tree before parsing
