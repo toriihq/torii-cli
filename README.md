@@ -108,6 +108,7 @@ All commands output structured JSON to stdout, making it easy to pipe into `jq`,
 |---------|-------------|
 | `discovery` | List all available API commands as JSON |
 | `schema <group> <action>` | Show parameters, types, and enums for a command |
+| `whoami` | Show current API environment and connected organization |
 | `version` | Show CLI version |
 | `cache clear` | Clear the cached OpenAPI spec |
 
