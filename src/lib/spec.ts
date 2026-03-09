@@ -66,6 +66,46 @@ function mapType(openApiType: string): string {
   return openApiType || 'string'
 }
 
+/** Build a human-readable description of the expected JSON body from a schema. */
+function describeBodySchema(schema: any): string {
+  if (!schema) return 'JSON request body'
+  try {
+    const example = schemaToExample(schema)
+    if (example !== undefined) {
+      return `JSON body, e.g.: ${JSON.stringify(example)}`
+    }
+  } catch {
+    // Fall through to generic description
+  }
+  return 'JSON request body'
+}
+
+/** Recursively build a minimal example value from a JSON Schema. */
+function schemaToExample(schema: any, depth = 0): any {
+  if (!schema || depth > 3) return undefined
+  if (schema.example !== undefined) return schema.example
+
+  if (schema.type === 'object' && schema.properties) {
+    const obj: Record<string, any> = {}
+    for (const [key, prop] of Object.entries<any>(schema.properties)) {
+      const val = schemaToExample(prop, depth + 1)
+      if (val !== undefined) obj[key] = val
+    }
+    return Object.keys(obj).length > 0 ? obj : undefined
+  }
+
+  if (schema.type === 'array' && schema.items) {
+    const item = schemaToExample(schema.items, depth + 1)
+    return item !== undefined ? [item] : undefined
+  }
+
+  if (schema.type === 'string') return schema.enum?.[0] || '<string>'
+  if (schema.type === 'number' || schema.type === 'integer') return 0
+  if (schema.type === 'boolean') return false
+
+  return undefined
+}
+
 function methodVerb(method: string, hasParam: boolean): string {
   switch (method.toLowerCase()) {
     case 'get':
@@ -143,14 +183,21 @@ export function parseSpec(spec: any): CliOperation[] {
 
       // Check for body parameter (only for json operations)
       if (kind === 'json') {
+        // Swagger 2.0: body param in parameters array
         const bodyParam = (operation.parameters || []).find((p: any) => p.in === 'body')
-        if (bodyParam) {
+        // OpenAPI 3.0: requestBody object
+        const requestBody = operation.requestBody
+
+        if (bodyParam || requestBody) {
+          const schema = bodyParam?.schema || requestBody?.content?.['application/json']?.schema
+          const bodyDesc = describeBodySchema(schema)
+          const required = bodyParam ? (bodyParam.required || false) : (requestBody?.required !== false)
           params.push({
             name: 'payload',
             in: 'body',
             type: 'object',
-            required: bodyParam.required || false,
-            description: 'JSON request body'
+            required,
+            description: bodyDesc
           })
         }
       }

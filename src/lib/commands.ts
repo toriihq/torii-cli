@@ -24,7 +24,7 @@ export function buildCommandTree(program: Command, operations: CliOperation[], h
       // Register params as options
       for (const param of op.params) {
         if (param.in === 'body') {
-          actionCmd.option('--payload <json>', 'JSON request body')
+          actionCmd.option('--payload <json>', param.description || 'JSON request body')
           continue
         }
         if (param.in === 'formData' && param.type === 'file') {
