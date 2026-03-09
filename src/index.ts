@@ -14,9 +14,11 @@ function getSpecOptions(): { specUrl?: string; noCache?: boolean } {
 
 const apiKeyFromEnv = process.env.TORII_API_KEY
 
+const pkg = require('../../package.json')
+
 program
   .name('torii-cli')
-  .version('0.1.0')
+  .version(pkg.version)
   .description('Torii CLI — OpenAPI-driven CLI for LLM agents')
   .option('--api-url <url>', 'Torii API base URL', process.env.TORII_API_URL || 'https://api.toriihq.com')
   .option('--api-key <key>', 'API Bearer token', apiKeyFromEnv)
@@ -54,7 +56,6 @@ program
   .command('version')
   .description('Show CLI version')
   .action(() => {
-    const pkg = require('../../package.json')
     formatSuccess({ version: pkg.version })
   })
 
